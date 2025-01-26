@@ -2,9 +2,9 @@
 
 ---
 
-## Repository Structure
+## Repository Files
 
-For more detailed information about each file, including usage instructions and examples, visit the [Project Wiki](https://github.com/web-lifter/wiki/wiki).
+For more detailed information about each file, including usage instructions and examples, visit the [Project Wiki](https://github.com/web-lifter/plotly-charts/wiki).
 
 ---
 
@@ -14,7 +14,7 @@ To use the snippets and scripts:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/web-lifter/plotly.git
+   git clone https://github.com/web-lifter/plotly-charts.git
    ```
 
 2. Add the desired code snippet or script to your WordPress theme or plugin.
