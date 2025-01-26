@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Effectiveness Chart</title>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+</head>
+<body>
+    <div id="seoChart" style="width: 100%; max-width: 800px; height: 600px; margin: auto;"></div>
+    <figcaption style="text-align: center; margin-top: 10px; font-style: italic;">
+        Figure 1.1: A visualization of the cost effectiveness of SEO
+    </figcaption>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Data for the chart
+            const years = [...Array(10).keys()].map(i => i + 1);
+            const seoRevenue = years.map(year => 1000 * Math.pow(30000 / 1000, year / 10));
+            const seoCost = years.map(year => 500 * Math.pow(1.15, Math.floor(year / 2)));
+            const costPerCustomer = years.map(year => 200 / (1 + 0.2 * year));
+            const brandSearches = years.map(year => 500 * Math.pow(1.2, year));
+
+            const trace1 = {
+                x: years,
+                y: seoRevenue,
+                name: 'Revenue from SEO',
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: 'blue' }
+            };
+
+            const trace2 = {
+                x: years,
+                y: seoCost,
+                name: 'SEO Service Cost',
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: 'green' }
+            };
+
+            const trace3 = {
+                x: years,
+                y: costPerCustomer,
+                name: 'Cost per Customer',
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: 'orange' },
+                yaxis: 'y2'
+            };
+
+            const trace4 = {
+                x: years,
+                y: brandSearches,
+                name: 'Brand Searches',
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: 'purple', dash: 'dot' }
+            };
+
+            const data = [trace1, trace2, trace3, trace4];
+
+            const layout = {
+                title: 'Cost Effectiveness of SEO Over a 10-Year Period',
+                xaxis: { title: 'Year' },
+                yaxis: { title: 'Revenue ($) and SEO Costs ($)', titlefont: { color: 'blue' }, tickfont: { color: 'blue' } },
+                yaxis2: {
+                    title: 'Cost per Customer ($)',
+                    titlefont: { color: 'orange' },
+                    tickfont: { color: 'orange' },
+                    overlaying: 'y',
+                    side: 'right'
+                },
+                legend: { x: 0, y: -0.2, orientation: 'h' },
+                margin: { t: 50, b: 50 }
+            };
+
+            const config = {
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('seoChart', data, layout, config);
+        });
+    </script>
+</body>
+</html>
