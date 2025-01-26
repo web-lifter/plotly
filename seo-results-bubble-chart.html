@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time to Grow Traffic vs. Revenue by Category (Organic Search)</title>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+</head>
+<body>
+    <div id="bubbleChart" style="width: 100%; max-width: 100%; height: 600px; margin: auto;"></div>
+    <figcaption style="text-align: center; margin-top: 10px; margin-bottom: 25px;">
+        Figure 1.2: This bubble chart illustrates the relationship between the time required to achieve a 20% growth in traffic (x-axis) and revenue (y-axis) across various business categories. 
+        Each small circle represents an individual business, categorized by color. Larger, semi-transparent circles indicate the average performance of each category, offering insights into overall trends and outliers.
+    </figcaption>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sample data for individual businesses (small circles)
+            const individualBusinesses = [
+                {
+                    x: [12, 14, 10],
+                    y: [15, 20, 12],
+                    text: ['Business A', 'Business B', 'Business C'],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: 'blue',
+                        opacity: 0.8
+                    },
+                    name: 'Financial'
+                },
+                {
+                    x: [10, 11, 13],
+                    y: [12, 15, 18],
+                    text: ['Business D', 'Business E', 'Business F'],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: 'green',
+                        opacity: 0.8
+                    },
+                    name: 'Health & Fitness'
+                },
+                {
+                    x: [8, 9, 10],
+                    y: [11, 13, 14],
+                    text: ['Business G', 'Business H', 'Business I'],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: 'orange',
+                        opacity: 0.8
+                    },
+                    name: 'Entertainment'
+                },
+                {
+                    x: [16, 18, 20],
+                    y: [19, 22, 25],
+                    text: ['Business J', 'Business K', 'Business L'],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: 'purple',
+                        opacity: 0.8
+                    },
+                    name: 'eCommerce'
+                },
+                {
+                    x: [9, 10, 11],
+                    y: [10, 12, 15],
+                    text: ['Business M', 'Business N', 'Business O'],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: 'red',
+                        opacity: 0.8
+                    },
+                    name: 'Trades'
+                }
+            ];
+
+            // Calculate category averages dynamically
+            const calculateAverages = (data) => {
+                return data.map(category => {
+                    const avgX = category.x.reduce((a, b) => a + b, 0) / category.x.length;
+                    const avgY = category.y.reduce((a, b) => a + b, 0) / category.y.length;
+                    return {
+                        x: [avgX],
+                        y: [avgY],
+                        text: [`Avg: ${category.name}`],
+                        mode: 'markers+text',
+                        marker: {
+                            size: 40,
+                            color: category.marker.color,
+                            opacity: 0.6
+                        },
+                        textposition: 'top center',
+                        name: `${category.name} Avg`
+                    };
+                });
+            };
+
+            // Generate category averages dynamically
+            const categoryAverages = calculateAverages(individualBusinesses);
+
+            // Combine individual businesses and category averages
+            const data = [...individualBusinesses, ...categoryAverages];
+
+            const layout = {
+                title: 'Time to Grow Traffic vs. Revenue by Category (Client Data)',
+                xaxis: {
+                    title: 'Avg Time to Grow Projected Annual Traffic By 25% (Months)'
+                },
+                yaxis: {
+                    title: 'Avg Time to Grow Projected Annual Revenue By 25% (Months)'
+                },
+                legend: {
+                    x: 0,
+                    y: -0.2,
+                    orientation: 'h',
+                    itemwidth: 150, // Adjust item width to create 4 columns
+                    xanchor: 'left',
+                    yanchor: 'top'
+                },
+                margin: { t: 50, b: 100 } // Adjust margins to make space for the legend
+            };
+
+            const config = {
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('bubbleChart', data, layout, config);
+        });
+    </script>
+</body>
+</html>
+
+
