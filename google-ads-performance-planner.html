@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Ads Performance Planner</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center">Google Ads Performance Planner</h2>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Current Performance</h4>
+                <form id="currentMetricsForm">
+                    <div class="mb-2">
+                        <label for="currentBudget">Budget ($)</label>
+                        <input type="number" id="currentBudget" class="form-control" value="1000">
+                    </div>
+                    <div class="mb-2">
+                        <label for="currentCPC">Cost per Click ($)</label>
+                        <input type="number" id="currentCPC" class="form-control" value="2">
+                    </div>
+                    <div class="mb-2">
+                        <label for="currentCTR">CTR (%)</label>
+                        <input type="number" id="currentCTR" class="form-control" value="5">
+                    </div>
+                    <div class="mb-2">
+                        <label for="currentConversionRate">Conversion Rate (%)</label>
+                        <input type="number" id="currentConversionRate" class="form-control" value="10">
+                    </div>
+                    <div class="mb-2">
+                        <label for="currentAvgConversionValue">Avg Conversion Value ($)</label>
+                        <input type="number" id="currentAvgConversionValue" class="form-control" value="50">
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-md-4">
+                <h4>Target Performance</h4>
+                <form id="targetMetricsForm">
+                    <div class="mb-2">
+                        <label for="targetBudget">Budget ($)</label>
+                        <input type="number" id="targetBudget" class="form-control" value="1500">
+                    </div>
+                    <div class="mb-2">
+                        <label for="targetCPC">Cost per Click ($)</label>
+                        <input type="number" id="targetCPC" class="form-control" value="1.5">
+                    </div>
+                    <div class="mb-2">
+                        <label for="targetCTR">CTR (%)</label>
+                        <input type="number" id="targetCTR" class="form-control" value="6">
+                    </div>
+                    <div class="mb-2">
+                        <label for="targetConversionRate">Conversion Rate (%)</label>
+                        <input type="number" id="targetConversionRate" class="form-control" value="12">
+                    </div>
+                    <div class="mb-2">
+                        <label for="targetAvgConversionValue">Avg Conversion Value ($)</label>
+                        <input type="number" id="targetAvgConversionValue" class="form-control" value="60">
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-md-4">
+                <h4>Options</h4>
+                <label for="metricSelect">Select Metrics to View:</label>
+                <select id="metricSelect" class="form-control" multiple>
+                    <option value="clicks">Clicks</option>
+                    <option value="impressions">Impressions</option>
+                    <option value="conversions">Conversions</option>
+                    <option value="roas">ROAS</option>
+                    <option value="costPerConversion">Cost per Conversion</option>
+                </select>
+                <button type="button" class="btn btn-primary w-100 mt-3" onclick="updatePerformance()">Calculate & Update Graph</button>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Performance Comparison</h4>
+                <div id="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateMetrics(budget, cpc, ctr, conversionRate, avgConversionValue) {
+            let clicks = budget / cpc;
+            let impressions = clicks / (ctr / 100);
+            let conversions = clicks * (conversionRate / 100);
+            let totalConversionValue = conversions * avgConversionValue;
+            let costPerConversion = conversions > 0 ? budget / conversions : 0;
+            let roas = totalConversionValue > 0 ? totalConversionValue / budget : 0;
+            
+            return { clicks, impressions, conversions, costPerConversion, roas };
+        }
+        
+        function updatePerformance() {
+            let current = calculateMetrics(
+                parseFloat(document.getElementById("currentBudget").value),
+                parseFloat(document.getElementById("currentCPC").value),
+                parseFloat(document.getElementById("currentCTR").value),
+                parseFloat(document.getElementById("currentConversionRate").value),
+                parseFloat(document.getElementById("currentAvgConversionValue").value)
+            );
+            
+            let target = calculateMetrics(
+                parseFloat(document.getElementById("targetBudget").value),
+                parseFloat(document.getElementById("targetCPC").value),
+                parseFloat(document.getElementById("targetCTR").value),
+                parseFloat(document.getElementById("targetConversionRate").value),
+                parseFloat(document.getElementById("targetAvgConversionValue").value)
+            );
+            
+            let selectedMetrics = Array.from(document.getElementById("metricSelect").selectedOptions).map(opt => opt.value);
+            let metrics = {
+                "clicks": "Clicks",
+                "impressions": "Impressions",
+                "conversions": "Conversions",
+                "costPerConversion": "Cost per Conversion",
+                "roas": "ROAS"
+            };
+
+            let data = selectedMetrics.map(metric => ({
+                x: ["Current", "Target"],
+                y: [current[metric], target[metric]],
+                type: 'bar',
+                name: metrics[metric]
+            }));
+            
+            let layout = {
+                title: "Performance Comparison",
+                barmode: 'group',
+                xaxis: { title: "Scenario" },
+                yaxis: { title: "Value" }
+            };
+
+            Plotly.newPlot("chart", data, layout);
+        }
+    </script>
+</body>
+</html>
